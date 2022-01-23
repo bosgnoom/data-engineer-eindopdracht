@@ -1,0 +1,52 @@
+digraph g {
+    graph [
+        rankdir = "LR"
+    ];
+    
+    node [
+        fontsize = "16"
+        style="rounded,filled"
+        fillcolor="#F7F7F7"
+    ];
+    
+    edge [
+    ];
+    
+    "node0" [
+        label = "<f0> Ophalen data SolarEdge | API | Python | Alleen nieuwe data ophalen "
+        shape = "record"
+    ];
+    
+    "node1" [
+        label = "<f0> Ophalen data weer | API | Python | Alleen nieuwe data ophalen "
+        shape = "record"
+    ];
+    
+    "node2" [
+        label = "<f0> Data storage | SQL | local server (RPi)\nof SQLite "
+        shape = "record"
+    ];
+    
+    "node_weer" [
+        label = "<f0> Weersvoorspelling | API | Python/Jupyter | Ophalen voorspelling "
+        shape = "record"
+    ];
+    
+    "node_ML" [
+        label = "<f0> Machine learning | Sk-learn | Jupyter/Pandas | Leren en voorspellen "
+        shape = "record"
+    ];
+    
+    "node_opbrengst" [
+        label = "<f0> Opbrengst per uur\nof per dag | Jupyter/Pandas | dag = &Sigma; uren "
+        shape = "record"
+    ];
+    
+    "node_weer":f0 -> "node_ML":f0
+    "node0":f0 -> "node2":f0
+    "node1":f0 -> "node2":f0
+    "node2":f0 -> "node_ML":f0
+    "node_ML":f0 -> "node_opbrengst":f0
+    
+}
+        

@@ -4,7 +4,7 @@ digraph g {
     ];
     
     node [
-        fontsize = "16"
+        fontsize = "12"
         style="rounded,filled"
         fillcolor="#F7F7F7"
     ];
@@ -18,12 +18,12 @@ digraph g {
     ];
     
     "node1" [
-        label = "<f0> Ophalen data weer | API | Python | Alleen nieuwe data ophalen "
+        label = "<f0> Ophalen data weer | API | Python | Alleen nieuwe data ophalen | KNMI/Buienrader/Openweather"
         shape = "record"
     ];
     
     "node2" [
-        label = "<f0> Data storage | SQL | local server (RPi)\nof SQLite "
+        label = "<f0> Data storage | SQL | local server (RPi)\nof SQLite | Data per uur of per dag"
         shape = "record"
     ];
     
@@ -33,7 +33,7 @@ digraph g {
     ];
     
     "node_ML" [
-        label = "<f0> Machine learning | Sk-learn | Jupyter/Pandas | Leren en voorspellen "
+        label = "<f0> Machine learning |  | Jupyter/Pandas | Leren en voorspellen | Sk-learn/Keras/Tensorflow\nhardware nodig?"
         shape = "record"
     ];
     
@@ -42,11 +42,17 @@ digraph g {
         shape = "record"
     ];
     
+    "node_accu" [
+        label = "<f0> Niveau accu | Jupyter | in - uit + productie = accumulatie "
+        shape = "record"
+    ];
+    
     "node_weer":f0 -> "node_ML":f0
     "node0":f0 -> "node2":f0
     "node1":f0 -> "node2":f0
     "node2":f0 -> "node_ML":f0
     "node_ML":f0 -> "node_opbrengst":f0
+    "node_opbrengst":f0 -> "node_accu":f0
     
 }
         

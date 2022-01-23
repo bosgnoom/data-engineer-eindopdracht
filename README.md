@@ -19,4 +19,4 @@ Aangezien de opbrengst van zonnepanelen afhankelijk is van onder andere het weer
 7. Volgens het principe `in - uit + productie = accumulatie` wordt voorspeld hoe lang de buffer meegaat.
 
 Schematisch gezien:
-![diagram](https://bosgnoom.github.com/data-engineer-eindopdracht/diagram.svg)
+![diagram](https://github.com/bosgnoom/data-engineer-eindopdracht/blob/main/diagram.svg)

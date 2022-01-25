@@ -46,6 +46,11 @@ digraph g {
         label = "<f0> Niveau accu | Jupyter | in - uit + productie = accumulatie "
         shape = "record"
     ];
+
+    "node_zon" [
+        label = "<f0> Stand van de zon | Elevation\nAzimuth | "
+        shape = "record"
+    ]
     
     "node_weer":f0 -> "node_ML":f0
     "node0":f0 -> "node2":f0
@@ -53,6 +58,7 @@ digraph g {
     "node2":f0 -> "node_ML":f0
     "node_ML":f0 -> "node_opbrengst":f0
     "node_opbrengst":f0 -> "node_accu":f0
+    "node_zon":f0 -> "node_ML":f0
     
 }
         

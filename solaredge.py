@@ -13,6 +13,7 @@ import sqlite3
 import datetime
 import dateutil
 import pprint
+import time
 
 
 # Start logger
@@ -163,6 +164,75 @@ def get_last_date(conn):
         exit(-1)
 
 
+def fetch_all_data(solaredge, conn):
+    """
+        Fetch data from SolarEdge
+        Store in database
+
+        Loop over each month since (beginning of time)
+        until yesterday
+    """
+    # Determine where to start with fetching data
+    # - Check last date from database
+    #   - No date --> starting date from API
+    #   - Date --> starting date from database
+
+    last_date = get_last_date(conn)
+    if last_date is None: 
+        start_date = solaredge.get_start_date()
+    else:
+        logger.debug(f'Last date in database: {last_date}')
+
+        # Round date to whole day, add one day extra
+        # Should result in e.g. 30-09-2019 --> 01-10-2019
+        start_date = datetime.date(last_date.year, last_date.month, last_date.day) + datetime.timedelta(days=1)
+
+    # Start looping over months
+    while start_date < (datetime.date.today() - datetime.timedelta(days=1)):
+        logger.info("")
+        logger.info(f'Starting data import from: {start_date}')
+
+        # Extract last-day-of-month from start date (e.g: 16-09-2019: 01-09-2019 -> 30-09-2019)
+        start_month = datetime.date(start_date.year, start_date.month, 1)
+        stop_date = start_month + dateutil.relativedelta.relativedelta(months=1, days=-1)
+
+        # Catch running until now
+        if stop_date > datetime.date.today():
+            stop_date = datetime.date.today() - datetime.timedelta(days=1)
+
+        logger.info(f'Stopping data import on: {stop_date}')
+
+        # Get one month of data
+        data = solaredge.get_production(start_date, stop_date)
+        records = []
+        for item in data:
+            # data is a list of dicts {'date': '2019-09-30 23:00:00', 'value': None}, where
+            # value is either None, or a number
+
+            tijdstip = dateutil.parser.parse(item["date"])
+            if item["value"] != None:    
+                energie = int(item["value"])
+            else:
+                energie = 0
+                
+            records.append((tijdstip, energie))
+
+        # Send data to database
+        cursor = conn.cursor()
+        cursor.executemany('INSERT INTO history VALUES (?, ?);', records)
+        logging.info(f'Entered {cursor.rowcount} records into database')
+
+        conn.commit()
+
+        # Cool down and contemplate
+        time.sleep(1)
+
+        # Set for next month
+        start_date = stop_date + datetime.timedelta(days=1)
+
+    logger.info("Data fetching complete!")
+
+
 # First, start the solaredge api:
 # - Opens config.ini and reads the API key
 # - The site_id is automatically determined and saved
@@ -179,50 +249,13 @@ prepare_tables(conn)
 # Database is connected, restore amount of connections for today
 solaredge.request_count = get_amount_of_connections(conn)
 
-# Determine where to start with fetching data
-# - Check last date from database
-#   - No date --> starting date from API
-#   - Date --> starting date from database
-last_date = get_last_date(conn)
-if last_date is None: 
-    start_date = solaredge.get_start_date()
-else:
-    logger.debug(f'Last date in database: {last_date}')
-    # Round date to whole day, add one day extra
-    start_date = datetime.date(last_date.year, last_date.month, last_date.day) + datetime.timedelta(days=1)
+# Fetch all data from solaredge, store in database
+fetch_all_data(solaredge, conn)
 
-logger.info(f'Starting data import from: {start_date}')
-
-# Extract last-day-of-month from start date (e.g: 16-09-2019: 01-09-2019 -> 30-09-2019)
-start_month = datetime.date(start_date.year, start_date.month, 1)
-stop_date = start_month + dateutil.relativedelta.relativedelta(months=1, days=-1)
-logger.info(f'Stopping data import on: {stop_date}')
-
-# Get one month of data
-data = solaredge.get_production(start_date, stop_date)
-records = []
-for item in data:
-    # data is a list of dicts {'date': '2019-09-30 23:00:00', 'value': None}, where
-    # value is either None, or a number
-
-    tijdstip = dateutil.parser.parse(item["date"])
-    if item["value"] != None:    
-        energie = int(item["value"])
-    else:
-        energie = 0
-        
-    records.append((tijdstip, energie))
-
-# Send data to database
-cursor = conn.cursor()
-cursor.executemany('INSERT INTO history VALUES (?, ?);', records)
-logging.info(f'Entered {cursor.rowcount} records into database')
-
-conn.commit()
-
-
-
+# Clean up
 # Save amount of requests for today
 save_amount_of_connections(conn, solaredge.request_count)
 
+# Close connection to database
 conn.close()
+

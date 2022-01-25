@@ -15,6 +15,7 @@ digraph g {
     "node0" [
         label = "<f0> Ophalen data SolarEdge | API | Python | Alleen nieuwe data ophalen "
         shape = "record"
+        fillcolor = "green"
     ];
     
     "node1" [

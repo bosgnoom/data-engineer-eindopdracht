@@ -33,7 +33,9 @@ URLs:
 De volgende stappen worden genomen:
 - [x] Verbinding kunnen maken met de API
 - [x] Ophalen van welke _site_ de informatie beschikbaar is
-- [ ] Site informatie naar database
+- [ ] Data ophalen van een maand
+- [ ] Data opslaan in de database
+- [ ] Data van overige maanden ophalen en opslaan
 
 Optioneel:
 - [ ] Aantal calls per dag bijhouden, rekening houden met query-quota

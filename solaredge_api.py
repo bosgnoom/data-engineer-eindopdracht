@@ -142,4 +142,4 @@ class SolarEdge:
         return response["energy"]["values"]
 
 if __name__ == "__main__":
-    print("\n\nThe solaredge_api is directly called, not supposed to do so...\n\n")
+    print("\n\nThe solaredge_api.py is directly called, not supposed to do so...\n\n")

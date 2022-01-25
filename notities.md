@@ -28,15 +28,35 @@ URLs:
 | Site Energy | /site/{siteId}/energy | Return the site energy measurements \[Wh\]<br>timeUnit=HOUR<br>Maximaal 1 maand opvragen<br>Rekening houden met _null_ |
 | Site Overview | /site/{siteId}/overview | Bevat de lastUpdateTime |
 
-## Doelen en uit te voeren taken
+
+### Doelen en uit te voeren taken
 
 De volgende stappen worden genomen:
 - [x] Verbinding kunnen maken met de API
 - [x] Ophalen van welke _site_ de informatie beschikbaar is
 - [x] Data ophalen van een maand
 - [x] Data opslaan in de database
-- [ ] Data van overige maanden ophalen en opslaan
+- [x] Data van overige maanden ophalen en opslaan
 
 Optioneel:
 - [x] Aantal calls per dag bijhouden, rekening houden met query-quota
 
+## Ophalen historische weergegevens
+
+Mogelijkheden:
+- KNMI?
+- Buienradar?
+- Openweather?
+
+Als eerste naar het KNMI gekeken. Weerstation Ell is het dichtste bij mij, voor deze opdracht ga ik er vanuit dat de gegevens aldaar representatief zijn voor het lokale weer hier. Ter info: Roermond - Ell is hemelsbreed 15 km.
+
+Het KNMI blijkt zelfs een API ter beschikking te hebben, zie [hier](https://www.knmi.nl/kennis-en-datacentrum/achtergrond/data-ophalen-vanuit-een-script). Korte samenvatting:
+
+- https://www.daggegevens.knmi.nl/klimatologie/uurgegevens
+- Parameters:
+  - start, end: YYYYMMDDHH
+  - vars: ALL
+  - stns: 377 (Ell)
+  - fmt: json
+
+  Met Panda's `pd.DataFrame.from_dict()` is de aangeleverde JSON snel in te lezen. Daarna kan deze ook weer opgeslagen worden in een sqlite3 database met `df.to_sql`. 

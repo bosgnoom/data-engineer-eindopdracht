@@ -33,10 +33,10 @@ URLs:
 De volgende stappen worden genomen:
 - [x] Verbinding kunnen maken met de API
 - [x] Ophalen van welke _site_ de informatie beschikbaar is
-- [ ] Data ophalen van een maand
-- [ ] Data opslaan in de database
+- [x] Data ophalen van een maand
+- [x] Data opslaan in de database
 - [ ] Data van overige maanden ophalen en opslaan
 
 Optioneel:
-- [ ] Aantal calls per dag bijhouden, rekening houden met query-quota
+- [x] Aantal calls per dag bijhouden, rekening houden met query-quota
 

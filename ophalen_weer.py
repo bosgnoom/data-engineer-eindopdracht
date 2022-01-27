@@ -9,42 +9,90 @@ import coloredlogs, logging
 import requests
 import sqlite3
 import datetime, dateutil
+import pandas as pd
 
 
-def get_last_date(conn):
+def get_solaredge_date_range():
     """
-    Get the latest date with information
-    from conn
-    else return None
+        Open solaredge database
+        Get first and last date (as in datum)
+
+        :return first, last date for weather history to fetch
     """
-    logger.debug("Getting the latest date from database")
-    sql = "SELECT tijdstip FROM history ORDER BY tijdstip DESC LIMIT 1;"
+    logger.info("Getting the dates from solaredge database")
+
+    conn = sqlite3.connect("solaredge.db")
     cursor = conn.cursor()
-    cursor.execute(sql)
-    result = cursor.fetchall()
 
-    # Check result, act accordingly. Expects empty list or list with 1 item
-    if len(result) == 0:
-        logger.debug("No results found in database")
+    sql = "SELECT tijdstip FROM history ORDER BY tijdstip ASC LIMIT 1;"
+    cursor.execute(sql)
+    start_date = dateutil.parser.parse(cursor.fetchone()[0])
+
+    sql = "SELECT tijdstip FROM history ORDER BY tijdstip DESC LIMIT 1;"
+    cursor.execute(sql)
+    end_date = dateutil.parser.parse(cursor.fetchone()[0])
+
+    logger.debug(f'Found {start_date} and {end_date}')
+
+    return start_date, end_date
+
+
+def get_knmi_last_date(conn):
+    """
+        Gets last date entry in knmi database
+        :param conn: database connection 
+        :return date or None
+    """
+    logger.info("Getting the last date from knmi database")
+
+    cursor = conn.cursor()
+    sql = "SELECT date FROM knmi ORDER BY date DESC LIMIT 1;"
+
+    try:
+        cursor.execute(sql)
+    except sqlite3.Error as e:
+        logger.warning(f'Error: no result from database: {e}')
         return None
-    elif len(result) == 1:
-        return dateutil.parser.parse(result[0][0])
-    else:
-        logger.critical("More results returned than expected, exiting...")
-        print(result)
-        exit(-1)
+
+    last_date = dateutil.parser.parse(cursor.fetchone()[0])
+
+    logger.debug(f'Result from knmi database call: {last_date}')
+    
+    return last_date
 
 
 # Start logger
 logger = logging.getLogger(__name__)
 coloredlogs.install(level="DEBUG", fmt="%(asctime)s %(levelname)s %(message)s")
 
-# Connect to sqlite3 database
-conn = sqlite3.connect("knmi.db")
+# Get dates from solaredge database
+first_solar, last_solar = get_solaredge_date_range()
 
-start_date = "20190916"
-end_date = "20190917"
+# Get last date from knmi database
+conn = sqlite3.connect('knmi.db')
+last_knmi = get_knmi_last_date(conn)
 
+# Determine which starting date to use
+if last_knmi is None:
+    logger.debug('No date from KNMI, using solaredge as starting date')
+    first_date = first_solar
+else:
+    logger.debug('KNMI returned a date, using this one as starting date')
+    first_date = last_knmi
+
+# Convert dates into knmi format
+start_date = first_date.strftime('%Y%m%d')
+end_date = last_solar.strftime('%Y%m%d')
+
+# Is a fetch needed?
+if start_date == end_date:
+    logger.info('No data needs to be fetched from KNMI, exiting...')
+    exit(0)
+
+logger.debug(f'Querying KNMI for dates {start_date} to {end_date}')
+
+# API call to KNMI, just get all data for now.
+# TODO: Optimize, only request parameters which will be put into model
 r = requests.get(
     "https://www.daggegevens.knmi.nl/klimatologie/uurgegevens",
     params={
@@ -56,5 +104,15 @@ r = requests.get(
     },
 )
 
-import pprint
-respons = r.json()
+# Convert the JSON to a DataFrame
+logger.info('JSON to DataFrame')
+weather_history = pd.DataFrame.from_dict(r.json())
+
+# Save to database
+logger.info('DataFrame to database')
+weather_history.to_sql('knmi', con=conn , if_exists='replace',
+           index_label='id')
+
+# Close connection to database
+conn.commit()
+conn.close()

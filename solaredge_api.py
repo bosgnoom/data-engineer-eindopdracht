@@ -31,10 +31,12 @@ class SolarEdge:
         self.end_date = end_date
 
 
-    def select_site_id(self):
-        logger.debug("Querying the site_id(s)")
-
-        # Check amount of requests (TODO: place request in separate def)
+    def _api_call(self, url, params):
+        """
+            Performs a request to SolarEdge API
+            Returns request response
+        """
+        # Check amount of requests 
         self.request_count += 1
         if self.request_count > 250:
             logger.warning("Too many requests pending...")
@@ -43,13 +45,24 @@ class SolarEdge:
             exit(-2)
 
         # Send request to SolarEdge API
-        r = requests.get(f"{self.API_LINK}/sites/list", params={"api_key": self.API_KEY})
+        r = requests.get(url, params=params)
 
+        # Check response code
         if r.status_code != 200:
             logger.critical(
-                f"Could not get sites list, error: {r.status_code} exiting..."
+                f"Could not get API CALL, error: {r.status_code} exiting..."
             )
             exit(-1)
+        
+        # Return response 
+        return r
+
+
+    def select_site_id(self):
+        logger.debug("Querying the site_id(s)")
+        
+        # Call API
+        r = self._api_call(f"{self.API_LINK}/sites/list", {"api_key": self.API_KEY} )
         response = r.json()["sites"]
 
         # Collect all site_ids
@@ -89,22 +102,9 @@ class SolarEdge:
         """
         logger.debug("Querying dataPeriod")
 
-        # Check amount of requests (TODO: place request in separate def)
-        self.request_count += 1
-        if self.request_count > 250:
-            logger.warning("Too many requests pending...")
-        if self.request_count > 275:
-            logger.critical("Too many requests, exiting...")
-            exit(-2)
-
         # Send request to SolarEdge API
-        r = requests.get(f"{self.API_LINK}/site/{self.SITE_ID}/dataPeriod", params={"api_key": self.API_KEY})
-
-        if r.status_code != 200:
-            logger.critical(
-                f"Could not get dataPeriod, error: {r.status_code} exiting..."
-            )
-            exit(-1)
+        r = self._api_call(f"{self.API_LINK}/site/{self.SITE_ID}/dataPeriod", 
+                            {"api_key": self.API_KEY})
         response = r.json()
 
         self.start_date = response["dataPeriod"]["startDate"]
@@ -117,26 +117,13 @@ class SolarEdge:
         """
         logger.debug("Querying energy data")
 
-        # Check amount of requests (TODO: place request in separate def)
-        self.request_count += 1
-        if self.request_count > 250:
-            logger.warning("Too many requests pending...")
-        if self.request_count > 275:
-            logger.critical("Too many requests, exiting...")
-            exit(-2)
-
         # Send request to SolarEdge API
-        r = requests.get(f"{self.API_LINK}/site/{self.SITE_ID}/energy", 
-                            params={"api_key": self.API_KEY, 
-                                    "timeUnit": "QUARTER_OF_AN_HOUR",
-                                    "startDate": start_date.strftime("%Y-%m-%d"), 
-                                    "endDate": stop_date.strftime("%Y-%m-%d")})
+        r = self._api_call(f"{self.API_LINK}/site/{self.SITE_ID}/energy", 
+                            {"api_key": self.API_KEY, 
+                            "timeUnit": "QUARTER_OF_AN_HOUR",
+                            "startDate": start_date.strftime("%Y-%m-%d"), 
+                            "endDate": stop_date.strftime("%Y-%m-%d")})
 
-        if r.status_code != 200:
-            logger.critical(
-                f"Could not get dataPeriod, error: {r.status_code} exiting..."
-            )
-            exit(-1)
         response = r.json()
 
         return response["energy"]["values"]

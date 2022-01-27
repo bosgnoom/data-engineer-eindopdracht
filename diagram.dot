@@ -13,28 +13,30 @@ digraph g {
     ];
     
     "node0" [
-        label = "<f0> Ophalen data SolarEdge | API | Python | Alleen nieuwe data ophalen "
+        label = "<f0> Ophalen data SolarEdge | API SolarEdge | Python | Verversen mogelijk "
         shape = "record"
         fillcolor = "green"
     ];
     
     "node1" [
-        label = "<f0> Ophalen data weer | API | Python | Alleen nieuwe data ophalen | KNMI/Buienrader/Openweather"
+        label = "<f0> Ophalen (oude) data weer | API KNMI | Python | Verversen mogelijk"
         shape = "record"
+        fillcolor = "green"
     ];
     
     "node2" [
-        label = "<f0> Data storage | SQL | local server (RPi)\nof SQLite | Data per uur of per dag"
+        label = "<f0> Data storage | SQL | SQLite3 "
         shape = "record"
+        fillcolor = "green"
     ];
     
     "node_weer" [
-        label = "<f0> Weersvoorspelling | API | Python/Jupyter | Ophalen voorspelling "
+        label = "<f0> Weersvoorspelling | JSON KNMI | Python/Jupyter | Ophalen voorspelling KNMI"
         shape = "record"
     ];
     
     "node_ML" [
-        label = "<f0> Machine learning |  | Jupyter/Pandas | Leren en voorspellen | Sk-learn/Keras/Tensorflow\nhardware nodig?"
+        label = "<f0> Machine learning | sk-learn | Jupyter/Pandas | Leren en voorspellen\nkNN/CNN/RNN?"
         shape = "record"
     ];
     
@@ -49,11 +51,11 @@ digraph g {
     ];
 
     "node_zon" [
-        label = "<f0> Stand van de zon | Elevation\nAzimuth | "
+        label = "<f0> Stand van de zon | PySolar | Elevation\nAzimuth  "
         shape = "record"
     ]
     
-    "node_weer":f0 -> "node_ML":f0
+    "node_weer":f0 -> "node_ML":n
     "node0":f0 -> "node2":f0
     "node1":f0 -> "node2":f0
     "node2":f0 -> "node_ML":f0

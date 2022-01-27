@@ -79,5 +79,11 @@ Naast de historische gegevens is ook de weersvoorspelling nodig. Ook deze zal va
 
 SQLite3. Database per file. [Klik voor tutorials](https://www.sqlitetutorial.net/sqlite-python/sqlite-python-select/)
 
+## Positie van de zon
+
+De positie van de zon heeft een grote invloed op de opbrengst van de zonnepanelen. Hoe rechter het zonlicht de panelen raakt, hoe hoger de opbrengst. Dit is duidelijk te zien in de energieproductie op een zonnige, onbewolkte dag: deze ziet er uit als een parabool. In de ochtend weinig, in de middag de piek en in de avond neemt de productie weer af. De positie van de zon wordt gekenmerkt door twee getallen: de `elevation` en de `azimuth`. Gelukkig is er een Python module beschikbaar om deze uit te rekenen: [Pysolar](https://pysolar.readthedocs.io/en/latest/#).
+
+Er is een kleine file `positie_zon.py` waarin de functie hiervan uitgeprobeerd wordt. Doel is om in een Jupyter notebook de gegevens van de zonnepanelen, historische weerdata en de positie van de zon in één dataset te krijgen. 
+
 
 

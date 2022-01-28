@@ -33,6 +33,7 @@ digraph g {
     "node_weer" [
         label = "<f0> Weersvoorspelling | JSON KNMI | Python/Jupyter | Ophalen voorspelling KNMI"
         shape = "record"
+        fillcolor = "green"
     ];
     
     "node_ML" [

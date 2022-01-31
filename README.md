@@ -20,3 +20,10 @@ Aangezien de opbrengst van zonnepanelen afhankelijk is van onder andere het weer
 
 Schematisch gezien (groen is operationeel):
 ![diagram](https://github.com/bosgnoom/data-engineer-eindopdracht/blob/main/diagram.svg)
+
+## Hier komt nog een mooie titel
+
+1. Ophalen historische gegevens van SolarEdge: `solaredge.py`
+2. Ophalen historische gegevens van KNMI: `ophalen_weer.py`
+3. Ophalen weersvoorspelling van KNMI: `weersvoorspelling.ipynb`
+

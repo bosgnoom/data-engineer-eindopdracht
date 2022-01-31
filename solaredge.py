@@ -193,7 +193,6 @@ def fetch_all_data(solaredge, conn):
     while start_date < (datetime.date.today() - datetime.timedelta(days=1)):
         logger.info("")
         
-
         # Extract last-day-of-month from start date (e.g: 16-09-2019: 01-09-2019 -> 30-09-2019)
         start_month = datetime.date(start_date.year, start_date.month, 1)
         stop_date = start_month + dateutil.relativedelta.relativedelta(
@@ -233,6 +232,9 @@ def fetch_all_data(solaredge, conn):
 
         # Set for next month
         start_date = stop_date + datetime.timedelta(days=1)
+    else:
+        # Ja, er kan een _else_ in een _while_ loop
+        logger.info("No data needs to be fetched (anymore)")
 
     logger.info("Data fetching complete!")
 

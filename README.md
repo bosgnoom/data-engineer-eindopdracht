@@ -18,5 +18,5 @@ Aangezien de opbrengst van zonnepanelen afhankelijk is van onder andere het weer
 6. Voorspelling van opbrengst van de zonnepanelen voor de komende dagen wordt bepaald.
 7. Volgens het principe `in - uit + productie = accumulatie` wordt voorspeld hoe lang de buffer meegaat.
 
-Schematisch gezien:
+Schematisch gezien (groen is operationeel):
 ![diagram](https://github.com/bosgnoom/data-engineer-eindopdracht/blob/main/diagram.svg)

@@ -110,7 +110,7 @@ weather_history = pd.DataFrame.from_dict(r.json())
 
 # Save to database
 logger.info('DataFrame to database')
-weather_history.to_sql('knmi', con=conn , if_exists='replace',
+weather_history.to_sql('knmi', con=conn , if_exists='append',
            index_label='id')
 
 # Close connection to database

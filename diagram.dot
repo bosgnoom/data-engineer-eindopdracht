@@ -60,6 +60,7 @@ digraph g {
     "node_combineren" [
         label = "<f0> Gegevens combineren | Jupyter "
         shape = "record"
+        fillcolor = "green"
     ]
     
     "node_weer":f0 -> "node_combineren":n

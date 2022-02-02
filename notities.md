@@ -103,5 +103,17 @@ De positie van de zon heeft een grote invloed op de opbrengst van de zonnepanele
 
 Er is een kleine file `positie_zon.py` waarin de functie hiervan uitgeprobeerd wordt. Doel is om in een Jupyter notebook de gegevens van de zonnepanelen, historische weerdata en de positie van de zon in één dataset te krijgen. 
 
+## Combineren van de gegevens
 
+Op basis van de data van de zonnepanelen en de weergegevens wordt een (1) DataFrame samengesteld. Deze gaat als input werken voor het machine learn model.
+
+## Machine learning
+
+Gaat het machine learning worden, of multi-regressie?
+
+Stappen te zetten:
+
+- [x] Gegevens inlezen in een Jupyter notebook
+- [ ] Plotten van onderlinge correlatie [check dit](https://scikit-learn.org/stable/auto_examples/inspection/plot_linear_model_coefficient_interpretation.html#sphx-glr-auto-examples-inspection-plot-linear-model-coefficient-interpretation-py)
+[ ]
 

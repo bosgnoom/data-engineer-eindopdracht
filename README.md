@@ -28,3 +28,4 @@ Schematisch gezien (groen is operationeel):
 3. Ophalen weersvoorspelling van KNMI: `weersvoorspelling.ipynb`
 4. Samenvoegen historische gegevens: `combineren.ipynb`
 
+

@@ -82,8 +82,7 @@ Voorlopig zal er naar de volgende items gekeken worden:
 - [Neerslag](https://cdn.knmi.nl/knmi/json/page/weer/waarschuwingen_verwachtingen/ensemble/iPluim/380_Expert_13021.json)
 - [Bewolking](https://cdn.knmi.nl/knmi/json/page/weer/waarschuwingen_verwachtingen/ensemble/iPluim/380_Expert_20010.json)
 
-In deze dataset is al direct een situatie zichtbaar: de bewolking staat historisch opgeslagen in een getal van 0 tot 8. Het KNMI omschrijft het volgende: _De hoeveelheid bewolking, de zogenoemde bedekkingsgraad, wordt uitgedrukt in okta’s (achtsten) van 0 (geheel onbewolkt) t/m 8 (volledig bewolkt), terwijl 9 okta betekent dat de bovenlucht onzichtbaar is bijvoorbeeld vanwege mist._ De weersvoorspelling geeft een kans (tussen de 0 en 100) op een bepaald bewolkingspatroon (Geheel bewolkt, Zwaar bewolkt, Half bewolkt, Licht bewolkt en
-Onbewolkt). Deze score wordt omgerekend naar een fictief bewolkingsgetal: 
+In deze dataset is al direct een situatie zichtbaar: de bewolking staat historisch opgeslagen in een getal van 0 tot 8. Het KNMI omschrijft het volgende: _De hoeveelheid bewolking, de zogenoemde bedekkingsgraad, wordt uitgedrukt in okta’s (achtsten) van 0 (geheel onbewolkt) t/m 8 (volledig bewolkt), terwijl 9 okta betekent dat de bovenlucht onzichtbaar is bijvoorbeeld vanwege mist._ De weersvoorspelling geeft een kans (tussen de 0 en 100) op een bepaald bewolkingspatroon (Geheel bewolkt, Zwaar bewolkt, Half bewolkt, Licht bewolkt en Onbewolkt). Deze score wordt omgerekend naar een fictief bewolkingsgetal: 
 
 - Onbewolkt: 0
 - Licht bewolkt: 2
@@ -101,11 +100,11 @@ SQLite3. Database per file. [Klik voor tutorials](https://www.sqlitetutorial.net
 
 De positie van de zon heeft een grote invloed op de opbrengst van de zonnepanelen. Hoe rechter het zonlicht de panelen raakt, hoe hoger de opbrengst. Dit is duidelijk te zien in de energieproductie op een zonnige, onbewolkte dag: deze ziet er uit als een parabool. In de ochtend weinig, in de middag de piek en in de avond neemt de productie weer af. De positie van de zon wordt gekenmerkt door twee getallen: de `elevation` en de `azimuth`. Gelukkig is er een Python module beschikbaar om deze uit te rekenen: [Pysolar](https://pysolar.readthedocs.io/en/latest/#).
 
-Er is een kleine file `positie_zon.py` waarin de functie hiervan uitgeprobeerd wordt. Doel is om in een Jupyter notebook de gegevens van de zonnepanelen, historische weerdata en de positie van de zon in één dataset te krijgen. 
+Er is een kleine file `positie_zon.py` waarin de functie hiervan uitgeprobeerd wordt. Doel is om in een Jupyter notebook/Python file de gegevens van de zonnepanelen, historische weerdata en de positie van de zon in één dataset te krijgen. 
 
 ## Combineren van de gegevens
 
-Op basis van de data van de zonnepanelen en de weergegevens wordt een (1) DataFrame samengesteld. Deze gaat als input werken voor het machine learn model.
+Op basis van de data van de zonnepanelen en de weergegevens wordt één DataFrame samengesteld. Deze gaat als input werken voor het machine learn model.
 
 ## Machine learning
 
@@ -114,6 +113,9 @@ Gaat het machine learning worden, of multi-regressie?
 Stappen te zetten:
 
 - [x] Gegevens inlezen in een Jupyter notebook
-- [ ] Plotten van onderlinge correlatie [check dit](https://scikit-learn.org/stable/auto_examples/inspection/plot_linear_model_coefficient_interpretation.html#sphx-glr-auto-examples-inspection-plot-linear-model-coefficient-interpretation-py)
-[ ]
-
+- [x] Plotten van onderlinge correlatie [check dit](https://scikit-learn.org/stable/auto_examples/inspection/plot_linear_model_coefficient_interpretation.html#sphx-glr-auto-examples-inspection-plot-linear-model-coefficient-interpretation-py)
+- [ ] Verschillende modellen testen
+- [ ] Één model uitkiezen en uitwerken
+- [ ] Model energie productie laten voorspellen
+- [ ] Lopende som uitrekenen, wanneer deze onder de nul uit komt, is de batterij leeg
+- [ ] Het aantal uren als einduitkomst geven

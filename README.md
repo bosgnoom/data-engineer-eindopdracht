@@ -10,22 +10,29 @@ Aangezien de opbrengst van zonnepanelen afhankelijk is van onder andere het weer
 
 ## Plan van aanpak
 
-1. Bepalen welke parameters in het model worden meegenomen, de x-en. Hierbij wordt in eerste instantie gedacht aan: de dag van het jaar, de hoek en helling van de zon en het weer (regen, zonuren, temperatuur).
-2. De opbrengst van de zonnepanelen wordt gemonitord. Deze data wordt al opgeslagen in een lokale influx-database. De geaggregeerde data is tevens beschikbaar in de API van [solaredge](https://www.solaredge.com/sites/default/files/se_monitoring_api.pdf).
-3. Naar verwachting zullen deze gegevens vele malen ingelezen worden om het machine-learn systeem te trainen. Om deze reden zullen ze opgeslagen worden in een SQL-database. Dan wordt de server van solar-edge niet te veel belast (en kan ik aan de fair use policy voldoen).
-4. Naast de opbrengst van de zonnepanelen zijn ook gegevens over het weer nodig. Deze zullen ook in de database opgeslagen moeten worden. De bron zal nog bepaald moeten worden. Buienradar, KNMI of openweatherdata zijn potentiële bronnen.
+1. Bepalen welke parameters in het model worden meegenomen, de x-en. Hierbij wordt in eerste instantie gedacht aan: de dag van het jaar, de **hoek** en **helling** van de zon en het weer (regen, zonuren, **temperatuur**).
+2. De opbrengst van de zonnepanelen wordt gemonitord. Deze data wordt al opgeslagen in een lokale influx-database. De geaggregeerde data is tevens beschikbaar in de API van [solaredge](https://www.solaredge.com/sites/default/files/se_monitoring_api.pdf). De **energie productie** zal via deze API gedownload worden.
+3. Naar verwachting zullen deze gegevens vele malen ingelezen worden om het machine-learn systeem te trainen. Om deze reden zullen ze opgeslagen worden in een lokale database. Dan wordt de server van SolarEdge niet te veel belast (en kan ik aan de fair use policy voldoen).
+4. Naast de opbrengst van de zonnepanelen zijn ook gegevens over het weer nodig, zowel de **historische** gegevens als de **weersvoorspelling**. Deze zullen ook in een database opgeslagen moeten worden. De bron zal nog bepaald moeten worden. Buienradar, KNMI of openweatherdata zijn potentiële bronnen.
 5. De gegevens worden gevoed aan een machine-learn systeem. Er zal een systeem uitgezocht moeten worden. Daarnaast zal ook de nauwkeurigheid van dit model bepaald moeten worden.
-6. Voorspelling van opbrengst van de zonnepanelen voor de komende dagen wordt bepaald.
+6. Voorspelling van opbrengst van de zonnepanelen voor de komende dagen wordt bepaald aan de hand van het machine learn model.
 7. Volgens het principe `in - uit + productie = accumulatie` wordt voorspeld hoe lang de buffer meegaat.
 
 Schematisch gezien (groen is operationeel):
 ![diagram](https://github.com/bosgnoom/data-engineer-eindopdracht/blob/main/diagram.svg)
 
-## Hier komt nog een mooie titel
+## Uitgewerkte onderdelen
 
 1. Ophalen historische gegevens van SolarEdge: `ophalen_solaredge.py`
 2. Ophalen historische gegevens van KNMI: `ophalen_weer.py`
-3. Ophalen weersvoorspelling van KNMI: `weersvoorspelling.ipynb` &rarr; `ophalen_weersvoorspelling.py` 
+3. Ophalen weersvoorspelling van KNMI: ~~`weersvoorspelling.ipynb`~~ &rarr; `ophalen_weersvoorspelling.py` 
 4. Samenvoegen historische gegevens: `combineren.ipynb`
 
+## Onderdelen in ontwikkeling
 
+5. Machine learning: `data_analyse.ipynb`
+
+## Nog uit te voeren
+
+- Energieproductie aan de hand van model
+- Uitrekenen wanneer batterij leeg is

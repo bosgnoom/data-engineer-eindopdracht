@@ -75,7 +75,7 @@ data["alt"] = data.apply(
 
 logger.debug("Solar azimuth")
 data["azi"] = data.apply(
-    lambda row: pysolar.solar.get_azimuth_fast(
+    lambda row: pysolar.solar.get_azimuth(
         latitude, longitude, 
         row["Time"].to_pydatetime()),
     axis=1)

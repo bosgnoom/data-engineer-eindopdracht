@@ -26,7 +26,7 @@ Schematisch gezien (groen is operationeel):
 1. Ophalen historische gegevens van SolarEdge: `ophalen_solaredge.py`
 2. Ophalen historische gegevens van KNMI: `ophalen_weer.py`
 3. Ophalen weersvoorspelling van KNMI: ~~`weersvoorspelling.ipynb`~~ &rarr; `ophalen_weersvoorspelling.py` 
-4. Samenvoegen historische gegevens: `combineren.ipynb`
+4. Samenvoegen historische gegevens: ~~`combineren.ipynb`~~ &rarr; `combineren.py`
 
 ## Onderdelen in ontwikkeling
 

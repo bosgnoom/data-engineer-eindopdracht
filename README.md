@@ -34,5 +34,9 @@ Schematisch gezien (groen is operationeel):
 
 ## Nog uit te voeren
 
-- Energieproductie aan de hand van model
-- Uitrekenen wanneer batterij leeg is
+- [x] Energieproductie aan de hand van model
+- [x] Uitrekenen wanneer batterij leeg is
+- [ ] Evaluatie van het model
+    - [ ] Opslaan huidige voorspelling
+    - [ ] Plotten van vorige voorspellingen
+    - [ ] Uitspraak betrouwbaarheid model

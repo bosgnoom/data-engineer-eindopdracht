@@ -37,18 +37,21 @@ digraph g {
     ];
     
     "node_ML" [
-        label = "<f0> Machine learning | sk-learn | Jupyter/Pandas | Leren en voorspellen\nkNN/CNN/RNN?"
+        label = "<f0> Machine learning | sk-learn | Jupyter/Pandas | Leren en voorspellen\nkNN"
         shape = "record"
+        fillcolor = "green"
     ];
     
     "node_opbrengst" [
         label = "<f0> Opbrengst per uur\nof per dag | Jupyter/Pandas | dag = &Sigma; uren "
         shape = "record"
+        fillcolor = "green"
     ];
     
     "node_accu" [
         label = "<f0> Niveau accu | Jupyter | in - uit + productie = accumulatie "
         shape = "record"
+        fillcolor = "green"
     ];
 
     "node_zon" [
@@ -62,8 +65,13 @@ digraph g {
         shape = "record"
         fillcolor = "green"
     ]
+
+    "node_evaluatie" [
+        label = "<f0> Model evaluatie | Jupyter | Opslaan voorspelling en\nplotten in tijd"
+        shape = "record"
+    ]
     
-    "node_weer":f0 -> "node_combineren":n
+    "node_weer":f0 -> "node_ML":n
     "node0":f0 -> "node2":f0
     "node1":f0 -> "node2":f0
     "node2":f0 -> "node_combineren":f0
@@ -72,6 +80,8 @@ digraph g {
     "node_ML":f0 -> "node_opbrengst":f0
     "node_opbrengst":f0 -> "node_accu":f0
     "node_zon":f0 -> "node_combineren":f0
+    "node_opbrengst":f0 -> "node_evaluatie":f0
+    "node_zon":f0 -> "node_weer":f0
     
 }
         

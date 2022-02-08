@@ -36,7 +36,8 @@ Schematisch gezien (groen is operationeel):
 
 - [x] Energieproductie aan de hand van model
 - [x] Uitrekenen wanneer batterij leeg is
-- [ ] Evaluatie van het model
-    - [ ] Opslaan huidige voorspelling
-    - [ ] Plotten van vorige voorspellingen
+- [x] Evaluatie van het model
+    - [x] Opslaan huidige voorspelling
+    - [x] Plotten van vorige voorspellingen
     - [ ] Uitspraak betrouwbaarheid model
+- [ ] Losse databases naar één enkele omzetten 

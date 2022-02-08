@@ -69,6 +69,7 @@ digraph g {
     "node_evaluatie" [
         label = "<f0> Model evaluatie | Jupyter | Opslaan voorspelling en\nplotten in tijd"
         shape = "record"
+        fillcolor = "green"
     ]
     
     "node_weer":f0 -> "node_ML":n

@@ -144,15 +144,15 @@ def get_last_date(conn):
     from conn
     else return None
     """
-    logger.debug("Getting the latest date from database")
-    sql = "SELECT tijdstip FROM solaredge_history ORDER BY tijdstip DESC LIMIT 1;"
+    logger.debug("Fetching the latest date from database")
+    sql = "SELECT tijdstip FROM solaredge_history ORDER BY tijdstip DESC LIMIT 1"
     cursor = conn.cursor()
     cursor.execute(sql)
     result = cursor.fetchall()
 
     # Check result, act accordingly. Expects empty list or list with 1 item
     if len(result) == 0:
-        logger.debug("No results found in database")
+        logger.debug("No dates found in database")
         return None
     elif len(result) == 1:
         return dateutil.parser.parse(result[0][0])
@@ -177,7 +177,8 @@ def fetch_all_data(solaredge, conn):
 
     last_date = get_last_date(conn)
     if last_date is None:
-        start_date = solaredge.get_start_date()
+        # solaredge returns a datetime, convert into date
+        start_date = solaredge.get_start_date().date()
     else:
         logger.debug(f"Last date in database: {last_date}")
 
@@ -190,6 +191,8 @@ def fetch_all_data(solaredge, conn):
     logger.info(f"Starting data import from: {start_date}")
 
     # Start looping over months
+    # logger.warning(f'start_date: {type(start_date)}')
+    # logger.warning(f'date: {type(datetime.date.today() - datetime.timedelta(days=1))}')
     while start_date <= (datetime.date.today() - datetime.timedelta(days=1)):
         logger.info("")
 

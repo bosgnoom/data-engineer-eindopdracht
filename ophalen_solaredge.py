@@ -190,7 +190,7 @@ def fetch_all_data(solaredge, conn):
     logger.info(f"Starting data import from: {start_date}")
     
     # Start looping over months
-    while start_date < (datetime.date.today() - datetime.timedelta(days=1)):
+    while start_date <= (datetime.date.today() - datetime.timedelta(days=1)):
         logger.info("")
         
         # Extract last-day-of-month from start date (e.g: 16-09-2019: 01-09-2019 -> 30-09-2019)

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 """
-    SolarEdge Datagetter
+    Get produced energy data via SolarEdge API
     - Gets history data from SolarEdge monitoring API
     - Puts this data into a database
 """
@@ -239,28 +239,34 @@ def fetch_all_data(solaredge, conn):
     logger.info("Data fetching complete!")
 
 
-# First, start the solaredge api:
-# - Opens config.ini and reads the API key
-# - The site_id is automatically determined and saved
-solaredge = start_solaredge_api()
+def get_data():
+    # First, start the solaredge api:
+    # - Opens config.ini and reads the API key
+    # - The site_id is automatically determined and saved
+    solaredge = start_solaredge_api()
 
-# Open database
-# Separate from class SolarEdge, to provide easy switching of databases
-# SQLite3 for now, keep data local (will be pushed into github repo)
-conn = sqlite3.connect("solaredge.db")
+    # Open database
+    # Separate from class SolarEdge, to provide easy switching of databases
+    # SQLite3 for now, keep data local (will be pushed into github repo)
+    conn = sqlite3.connect("solaredge.db")
 
-# Prepare tables in database, only needed for first run
-prepare_tables(conn)
+    # Prepare tables in database, only needed for first run
+    prepare_tables(conn)
 
-# Database is connected, restore amount of connections for today
-solaredge.request_count = get_amount_of_connections(conn)
+    # Database is connected, restore amount of connections for today
+    solaredge.request_count = get_amount_of_connections(conn)
 
-# Fetch all data from solaredge, store in database
-fetch_all_data(solaredge, conn)
+    # Fetch all data from solaredge, store in database
+    fetch_all_data(solaredge, conn)
 
-# Clean up
-# Save amount of requests for today
-save_amount_of_connections(conn, solaredge.request_count)
+    # Clean up
+    # Save amount of requests for today
+    save_amount_of_connections(conn, solaredge.request_count)
 
-# Close connection to database
-conn.close()
+    # Close connection to database
+    conn.close()
+
+# Wrap get_data into __main__, so this function can be
+# called through an "import ophalen_solaredge"
+if __name__ == "__main__":
+    get_data()

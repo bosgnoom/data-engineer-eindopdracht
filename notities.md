@@ -114,8 +114,8 @@ Stappen te zetten:
 
 - [x] Gegevens inlezen in een Jupyter notebook
 - [x] Plotten van onderlinge correlatie [check dit](https://scikit-learn.org/stable/auto_examples/inspection/plot_linear_model_coefficient_interpretation.html#sphx-glr-auto-examples-inspection-plot-linear-model-coefficient-interpretation-py)
-- [ ] Verschillende modellen testen
-- [ ] Één model uitkiezen en uitwerken
-- [ ] Model energie productie laten voorspellen
-- [ ] Lopende som uitrekenen, wanneer deze onder de nul uit komt, is de batterij leeg
-- [ ] Het aantal uren als einduitkomst geven
+- [x] Verschillende modellen testen, kNN als eerste volledig uitgewerkt
+- [x] Één model uitkiezen en uitwerken
+- [x] Model energie productie laten voorspellen
+- [x] Lopende som uitrekenen, wanneer deze onder de nul uit komt, is de batterij leeg
+- [x] Het aantal uren als einduitkomst geven

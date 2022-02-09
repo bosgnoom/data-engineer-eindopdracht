@@ -1,4 +1,10 @@
-# Ophalen weersvoorspelling
+#!/usr/bin/python3
+
+"""
+    Fetch weather forecast
+    Source: KNMI
+"""
+
 import requests
 import pandas as pd
 import coloredlogs, logging
@@ -98,29 +104,35 @@ def ophalen_bewolking():
     return bewolking
 
 
-## Combineren van de weersvoorspelling
-logger.info("Ophalen weersvoorspelling")
-temperatuur = ophalen_temperatuur()
-neerslag = ophalen_neerslag()
-bewolking = ophalen_bewolking()
+def get_data():
+    ## Combineren van de weersvoorspelling
+    logger.info("Ophalen weersvoorspelling")
+    temperatuur = ophalen_temperatuur()
+    neerslag = ophalen_neerslag()
+    bewolking = ophalen_bewolking()
+
+    # De temperatuur, neerslag en bewolking worden in één dataframe opgeslagen
+    logger.info("Weersvoorspelling samenvoegen")
+    voorspelling = temperatuur.merge(neerslag, left_index=True, right_index=True)
+    voorspelling = voorspelling.merge(bewolking["bewolking"], left_index=True, right_index=True)
+
+    # Voorspelling opslaan in een SQLite3 database
+    logger.info("Weersvoorspelling opslaan in de database")
+    conn = sqlite3.connect("voorspelling.db")
+    cursor = conn.cursor()
+
+    # Vorige voorspelling wissen
+    cursor.execute("DROP TABLE IF EXISTS voorspelling")
+
+    # Voorspelling opslaan in database
+    voorspelling.to_sql("voorspelling", conn)
+
+    # Opslaan en afsluiten
+    conn.commit()
+    conn.close()
 
 
-# De temperatuur, neerslag en bewolking worden in één dataframe opgeslagen
-logger.info("Weersvoorspelling samenvoegen")
-voorspelling = temperatuur.merge(neerslag, left_index=True, right_index=True)
-voorspelling = voorspelling.merge(bewolking["bewolking"], left_index=True, right_index=True)
-
-# Voorspelling opslaan in een SQLite3 database
-logger.info("Weersvoorspelling opslaan in de database")
-conn = sqlite3.connect("voorspelling.db")
-cursor = conn.cursor()
-
-# Vorige voorspelling wissen
-cursor.execute("DROP TABLE IF EXISTS voorspelling")
-
-# Voorspelling opslaan in database
-voorspelling.to_sql("voorspelling", conn)
-
-# Opslaan en afsluiten
-conn.commit()
-conn.close()
+# Wrap get_data into __main__, so this function can be
+# called through an "import ophalen_weersvoorspelling"
+if __name__ == "__main__":
+    get_data()

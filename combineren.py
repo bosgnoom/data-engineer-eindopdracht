@@ -1,5 +1,11 @@
 #!/usr/bin/python3
 
+
+"""
+    Combine data from solaredge and historical weather into one dataset
+"""
+
+
 import sqlite3
 import pysolar
 import pandas as pd
@@ -48,53 +54,58 @@ def inlezen_weer():
     return data
 
 
-# Zonnepanelen worden per kwartier gesampled. Met _resample_ het totaal per uur uitrekenen
-logger.info("Inlezen SolarEdge, resample naar 1H interval")
-zonnepanelen = inlezen_solaredge().resample("1H").sum()
-    
-# Data van het weer inlezen. Samenvoegen met data zonnepanelen
-logger.info("Inlezen weer, samenvoegen met SolarEdge")
-data = inlezen_weer()
-data = data.merge(zonnepanelen, left_index=True, right_index=True)
+def combine_data():
+    # Zonnepanelen worden per kwartier gesampled. Met _resample_ het totaal per uur uitrekenen
+    logger.info("Inlezen SolarEdge, resample naar 1H interval")
+    zonnepanelen = inlezen_solaredge().resample("1H").sum()
+        
+    # Data van het weer inlezen. Samenvoegen met data zonnepanelen
+    logger.info("Inlezen weer, samenvoegen met SolarEdge")
+    data = inlezen_weer()
+    data = data.merge(zonnepanelen, left_index=True, right_index=True)
 
-# Nu ook de positie van de zon berekenen op basis van mijn positie
-logger.info("Positie van de zon uitrekenen")
-latitude = 51.2
-longitude = 6
+    # Nu ook de positie van de zon berekenen op basis van mijn positie
+    logger.info("Positie van de zon uitrekenen")
+    latitude = 51.2
+    longitude = 6
 
-# pysolar heeft een datetime nodig. Met reset_index van de tijd een kolom maken,
-# berekeningen uitvoeren en de tijd kolom weer als index terugzetten
-data.reset_index(inplace=True)
-# Ik ben er nog niet achter hoe deze functies te _mappen_, dan maar via lambda
-logger.debug("Solar altitude")
-data["alt"] = data.apply(
-    lambda row: pysolar.solar.get_altitude_fast(
-        latitude, longitude, 
-        row["Time"].to_pydatetime()), 
-    axis=1)
+    # pysolar heeft een datetime nodig. Met reset_index van de tijd een kolom maken,
+    # berekeningen uitvoeren en de tijd kolom weer als index terugzetten
+    data.reset_index(inplace=True)
+    # Ik ben er nog niet achter hoe deze functies te _mappen_, dan maar via lambda
+    logger.debug("Solar altitude")
+    data["alt"] = data.apply(
+        lambda row: pysolar.solar.get_altitude_fast(
+            latitude, longitude, 
+            row["Time"].to_pydatetime()), 
+        axis=1)
 
-logger.debug("Solar azimuth")
-data["azi"] = data.apply(
-    lambda row: pysolar.solar.get_azimuth(
-        latitude, longitude, 
-        row["Time"].to_pydatetime()),
-    axis=1)
-data.set_index("Time", inplace=True)
+    logger.debug("Solar azimuth")
+    data["azi"] = data.apply(
+        lambda row: pysolar.solar.get_azimuth(
+            latitude, longitude, 
+            row["Time"].to_pydatetime()),
+        axis=1)
+    data.set_index("Time", inplace=True)
 
-# Kolommen een begrijpelijke naam geven
-logger.info("Kolommen andere naam geven")
-data.rename(columns={"T": "temperatuur", 
-             "DR": "duur_neerslag", 
-             "N": "bewolking", 
-             "alt": "solar_altitude", 
-             "azi": "solar_azimuth"},
-            inplace=True)
+    # Kolommen een begrijpelijke naam geven
+    logger.info("Kolommen andere naam geven")
+    data.rename(columns={"T": "temperatuur", 
+                "DR": "duur_neerslag", 
+                "N": "bewolking", 
+                "alt": "solar_altitude", 
+                "azi": "solar_azimuth"},
+                inplace=True)
 
-# Dataset opslaan voor te gebruiken in machine learn model
-logger.info("Dataset opslaan")
-conn = sqlite3.connect("dataset.db")
-data_export = data[["temperatuur", "duur_neerslag", "bewolking", "solar_altitude", "solar_azimuth", "energy"]]
-data_export.to_sql('history', con=conn, if_exists='replace')
+    # Dataset opslaan voor te gebruiken in machine learn model
+    logger.info("Dataset opslaan")
+    conn = sqlite3.connect("dataset.db")
+    data_export = data[["temperatuur", "duur_neerslag", "bewolking", "solar_altitude", "solar_azimuth", "energy"]]
+    data_export.to_sql('history', con=conn, if_exists='replace')
 
-conn.commit()
-conn.close()
+    conn.commit()
+    conn.close()
+
+
+if __name__ == "__main__":
+    combine_data()

@@ -30,7 +30,7 @@ Schematisch gezien:
 
 ## Onderdelen in ontwikkeling
 
-5. Machine learning: `data_analyse.ipynb`
+5. Data analyse en Machine learning: `data_analyse.ipynb`
 
 ## Nog uit te voeren
 

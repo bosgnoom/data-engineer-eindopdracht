@@ -1,16 +1,14 @@
 #!/usr/bin/python
 
 """
-    SolarEdge API Interface
-    - Gets (by default) HOURLY history data from SolarEdge monitoring API
+    SolarEdge API Interface,
+    Gets history data from SolarEdge monitoring API
 
     This is my first time building something with a class, so please be gentle ;)
 """
 
 import logging
 import requests
-import pprint
-import datetime
 from dateutil.parser import parse
 
 # Get logger

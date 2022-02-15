@@ -12,7 +12,6 @@ import solaredge_api as se
 import sqlite3
 import datetime
 import dateutil
-import pprint
 import time
 
 
@@ -56,7 +55,7 @@ def start_solaredge_api():
     else:
         logger.info("Site id exists in configfile")
 
-    # Initiate our SolarEdge class, the API key is mandatory
+    # Initiate the SolarEdge class, the API key is mandatory
     # If there's a site_id, use it. Otherwise query the site_id
     if "site_id" in config["SolarEdge"]:
         # Init WITH site_id
@@ -86,14 +85,14 @@ def prepare_tables(conn):
     returns None
     """
     logger.debug("Create table for connections-per-day")
-    sql = """CREATE TABLE IF NOT EXISTS connections ( 
+    sql = """CREATE TABLE IF NOT EXISTS solaredge_connections ( 
                 datum DATETIME PRIMARY KEY NOT NULL, 
                 amount INT NOT NULL );
             """
     conn.execute(sql)
 
     logger.debug("Create table for solaredge history")
-    sql = """CREATE TABLE IF NOT EXISTS history (
+    sql = """CREATE TABLE IF NOT EXISTS solaredge_history (
                 tijdstip DATETIME PRIMARY KEY NOT NULL,
                 energy FLOAT );
             """
@@ -108,7 +107,7 @@ def get_amount_of_connections(conn):
     from conn
     """
     logger.debug("Getting the amount of requests for today")
-    sql = "SELECT amount FROM connections WHERE datum = DATE('now');"
+    sql = "SELECT amount FROM solaredge_connections WHERE datum = DATE('now');"
     cursor = conn.cursor()
     cursor.execute(sql)
     result = cursor.fetchall()
@@ -122,6 +121,7 @@ def get_amount_of_connections(conn):
         logger.debug(f"Amount requests for today: {amount}")
         return amount
     else:
+        # Should not happen, keep it here as failsafe
         logger.critical("More results returned than expected, exiting...")
         print(result)
         exit(-1)
@@ -133,7 +133,7 @@ def save_amount_of_connections(conn, n):
     to conn
     """
     logger.debug(f"Saving the amount of requests ({n}) for today")
-    sql = f"INSERT OR REPLACE INTO connections VALUES ( DATE('now'), '{n}' );"
+    sql = f"INSERT OR REPLACE INTO solaredge_connections VALUES ( DATE('now'), '{n}' );"
     conn.execute(sql)
     conn.commit()
 
@@ -144,15 +144,15 @@ def get_last_date(conn):
     from conn
     else return None
     """
-    logger.debug("Getting the latest date from database")
-    sql = "SELECT tijdstip FROM history ORDER BY tijdstip DESC LIMIT 1;"
+    logger.debug("Fetching the latest date from database")
+    sql = "SELECT tijdstip FROM solaredge_history ORDER BY tijdstip DESC LIMIT 1"
     cursor = conn.cursor()
     cursor.execute(sql)
     result = cursor.fetchall()
 
     # Check result, act accordingly. Expects empty list or list with 1 item
     if len(result) == 0:
-        logger.debug("No results found in database")
+        logger.debug("No dates found in database")
         return None
     elif len(result) == 1:
         return dateutil.parser.parse(result[0][0])
@@ -177,7 +177,8 @@ def fetch_all_data(solaredge, conn):
 
     last_date = get_last_date(conn)
     if last_date is None:
-        start_date = solaredge.get_start_date()
+        # solaredge returns a datetime, convert into date
+        start_date = solaredge.get_start_date().date()
     else:
         logger.debug(f"Last date in database: {last_date}")
 
@@ -188,11 +189,13 @@ def fetch_all_data(solaredge, conn):
         ) + datetime.timedelta(days=1)
 
     logger.info(f"Starting data import from: {start_date}")
-    
+
     # Start looping over months
+    # logger.warning(f'start_date: {type(start_date)}')
+    # logger.warning(f'date: {type(datetime.date.today() - datetime.timedelta(days=1))}')
     while start_date <= (datetime.date.today() - datetime.timedelta(days=1)):
         logger.info("")
-        
+
         # Extract last-day-of-month from start date (e.g: 16-09-2019: 01-09-2019 -> 30-09-2019)
         start_month = datetime.date(start_date.year, start_date.month, 1)
         stop_date = start_month + dateutil.relativedelta.relativedelta(
@@ -222,7 +225,7 @@ def fetch_all_data(solaredge, conn):
 
         # Send data to database
         cursor = conn.cursor()
-        cursor.executemany("INSERT INTO history VALUES (?, ?);", records)
+        cursor.executemany("INSERT INTO solaredge_history VALUES (?, ?);", records)
         logging.info(f"Entered {cursor.rowcount} records into database")
 
         conn.commit()
@@ -248,7 +251,7 @@ def get_data():
     # Open database
     # Separate from class SolarEdge, to provide easy switching of databases
     # SQLite3 for now, keep data local (will be pushed into github repo)
-    conn = sqlite3.connect("solaredge.db")
+    conn = sqlite3.connect("database.db")
 
     # Prepare tables in database, only needed for first run
     prepare_tables(conn)
@@ -265,6 +268,7 @@ def get_data():
 
     # Close connection to database
     conn.close()
+
 
 # Wrap get_data into __main__, so this function can be
 # called through an "import ophalen_solaredge"

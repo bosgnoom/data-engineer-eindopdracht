@@ -118,14 +118,14 @@ def get_data():
 
     # Voorspelling opslaan in een SQLite3 database
     logger.info("Weersvoorspelling opslaan in de database")
-    conn = sqlite3.connect("voorspelling.db")
+    conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
 
     # Vorige voorspelling wissen
-    cursor.execute("DROP TABLE IF EXISTS voorspelling")
+    cursor.execute("DROP TABLE IF EXISTS knmi_forecast")
 
     # Voorspelling opslaan in database
-    voorspelling.to_sql("voorspelling", conn)
+    voorspelling.to_sql("knmi_forecast", conn)
 
     # Opslaan en afsluiten
     conn.commit()

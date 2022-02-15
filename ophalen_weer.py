@@ -17,23 +17,21 @@ logger = logging.getLogger(__name__)
 coloredlogs.install(level="DEBUG", fmt="%(asctime)s %(levelname)s %(message)s")
 
 
-def get_solaredge_date_range():
+def get_solaredge_date_range(conn):
     """
-        Open solaredge database
-        Get first and last date (as in datum)
+        Get first and last date (as in datum) from solaredge database
 
         :return first, last date for weather history to fetch
     """
     logger.info("Getting the dates from solaredge database")
 
-    conn = sqlite3.connect("solaredge.db")
     cursor = conn.cursor()
 
-    sql = "SELECT tijdstip FROM history ORDER BY tijdstip ASC LIMIT 1;"
+    sql = "SELECT tijdstip FROM solaredge_history ORDER BY tijdstip ASC LIMIT 1;"
     cursor.execute(sql)
     start_date = dateutil.parser.parse(cursor.fetchone()[0])
 
-    sql = "SELECT tijdstip FROM history ORDER BY tijdstip DESC LIMIT 1;"
+    sql = "SELECT tijdstip FROM solaredge_history ORDER BY tijdstip DESC LIMIT 1;"
     cursor.execute(sql)
     end_date = dateutil.parser.parse(cursor.fetchone()[0])
 
@@ -51,7 +49,7 @@ def get_knmi_last_date(conn):
     logger.info("Getting the last date from knmi database")
 
     cursor = conn.cursor()
-    sql = "SELECT date FROM knmi ORDER BY date DESC LIMIT 1;"
+    sql = "SELECT date FROM knmi_history ORDER BY date DESC LIMIT 1;"
 
     try:
         cursor.execute(sql)
@@ -67,12 +65,14 @@ def get_knmi_last_date(conn):
 
 
 def get_data():
-    # Get dates from solaredge database
-    first_solar, last_solar = get_solaredge_date_range()
+    # Connect to database
+    conn = sqlite3.connect('database.db')
 
     # Get last date from knmi database
-    conn = sqlite3.connect('knmi.db')
     last_knmi = get_knmi_last_date(conn)
+
+    # Get dates from solaredge database
+    first_solar, last_solar = get_solaredge_date_range(conn)
 
     # Determine which starting date to use
     if last_knmi is None:
@@ -112,7 +112,7 @@ def get_data():
 
     # Save to database
     logger.info('DataFrame to database')
-    weather_history.to_sql('knmi', con=conn , if_exists='append',
+    weather_history.to_sql('knmi_history', con=conn , if_exists='append',
             index_label='id')
 
     # Close connection to database

@@ -13,7 +13,7 @@ import sqlite3
 
 # Start logger
 logger = logging.getLogger(__name__)
-coloredlogs.install(level="DEBUG", fmt="%(asctime)s %(levelname)s %(message)s")
+coloredlogs.install(level="INFO", fmt="%(asctime)s %(levelname)s %(message)s")
 
 
 def ophalen_temperatuur():

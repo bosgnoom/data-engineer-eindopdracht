@@ -18,7 +18,7 @@ import ophalen_weersvoorspelling
 
 # Start logger
 logger = logging.getLogger(__name__)
-coloredlogs.install(level="DEBUG", fmt="%(asctime)s %(levelname)s %(message)s")
+coloredlogs.install(level="INFO", fmt="%(asctime)s %(levelname)s %(message)s")
 
 
 # Inlezen gegevens solaredge

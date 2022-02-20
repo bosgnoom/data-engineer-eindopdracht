@@ -26,11 +26,14 @@ Schematisch gezien:
 1. Ophalen historische gegevens van SolarEdge: `ophalen_solaredge.py`
 2. Ophalen historische gegevens van KNMI: `ophalen_weer.py`
 3. Ophalen weersvoorspelling van KNMI: `ophalen_weersvoorspelling.py` 
-4. Samenvoegen historische gegevens: `combineren.py`
+4. Samenvoegen historische gegevens: `build_dataset.py`
+5. Data analyse en Machine learning: `data_analyse.ipynb`
 
 ## Onderdelen in ontwikkeling
 
-5. Data analyse en Machine learning: `data_analyse.ipynb`
+6. Evaluatie
+7. Conclusie
+8. Tekstueel kloppend maken
 
 ## Nog uit te voeren
 
@@ -39,6 +42,6 @@ Schematisch gezien:
 - [x] Evaluatie van het model
     - [x] Opslaan huidige voorspelling
     - [x] Plotten van vorige voorspellingen
-    - [ ] Uitspraak betrouwbaarheid model
-- [ ] Losse databases naar één enkele omzetten 
-- [ ] Ander machine learn model kiezen en evalueren
+    - [x] Uitspraak betrouwbaarheid model
+- [x] Losse databases naar één enkele omzetten 
+- [x] Ander machine learn model (is XGBoost geworden) kiezen en evalueren

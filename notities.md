@@ -31,23 +31,10 @@ URLs:
 | Site Energy | /site/{siteId}/energy | Return the site energy measurements \[Wh\]<br>timeUnit=HOUR<br>Maximaal 1 maand opvragen<br>Rekening houden met _null_ |
 | Site Overview | /site/{siteId}/overview | Bevat de lastUpdateTime |
 
-**Doelen en uit te voeren taken**
-
-De volgende stappen worden genomen:
-- [x] Verbinding kunnen maken met de API
-- [x] Ophalen van welke _site_ de informatie beschikbaar is
-- [x] Data ophalen van een maand
-- [x] Data opslaan in de database
-- [x] Data van overige maanden ophalen en opslaan
-
-Optioneel:
-- [x] Aantal calls per dag bijhouden, rekening houden met query-quota
-
 
 ## Ophalen weergegevens
 
 De opbrengst van de zonnepanelen is afhankelijk van het weer. Welke parameters het model ingaan, zal later beschreven worden.
-
 
 ### Historische gegevens
 
@@ -62,15 +49,7 @@ Het KNMI blijkt een API ter beschikking te hebben voor historische data, zie [hi
   - stns: 377 (Ell)
   - fmt: json
 
-Met Panda's `pd.DataFrame.from_dict()` is de aangeleverde JSON snel in te lezen. Daarna kan deze ook weer opgeslagen worden in een sqlite3 database met `df.to_sql`. Dit kan in principe met twee regels code, hier ga ik geen eigen functie voor schrijven. 
-
-
-**Doelen en uit te voeren taken**
-
-- [x] Ophalen data van 1 dag
-- [x] Bepalen van welke dagen data op te halen. Data van de zonnepanelen is leidend.
-- [x] Ophalen data meerdere dagen
-- [x] Data opslaan in database
+Met Panda's `pd.DataFrame.from_dict()` is de aangeleverde JSON snel in te lezen. Daarna kan deze ook weer opgeslagen worden in een sqlite3 database met `df.to_sql`.
 
 
 ### Weersvoorspelling
@@ -92,30 +71,13 @@ In deze dataset is al direct een situatie zichtbaar: de bewolking staat historis
 
 De gezamelijk score wordt uitgerekend als het gemiddelde van bovenstaande.
 
+
 ## Database
 
 SQLite3. Database per file. [Klik voor tutorials](https://www.sqlitetutorial.net/sqlite-python/sqlite-python-select/)
 
+
 ## Positie van de zon
 
-De positie van de zon heeft een grote invloed op de opbrengst van de zonnepanelen. Hoe rechter het zonlicht de panelen raakt, hoe hoger de opbrengst. Dit is duidelijk te zien in de energieproductie op een zonnige, onbewolkte dag: deze ziet er uit als een parabool. In de ochtend weinig, in de middag de piek en in de avond neemt de productie weer af. De positie van de zon wordt gekenmerkt door twee getallen: de `elevation` en de `azimuth`. Gelukkig is er een Python module beschikbaar om deze uit te rekenen: [Pysolar](https://pysolar.readthedocs.io/en/latest/#).
+De positie van de zon heeft een grote invloed op de opbrengst van de zonnepanelen. Hoe rechter het zonlicht de panelen raakt, hoe hoger de opbrengst. Dit is duidelijk te zien in de energieproductie op een zonnige, onbewolkte dag: deze ziet er uit als een parabool. In de ochtend weinig, in de middag de piek en in de avond neemt de productie weer af. De positie van de zon wordt gekenmerkt door twee getallen: de `elevation` en de `azimuth`. Gelukkig is er een Python module beschikbaar om deze uit te rekenen: [Pysolar](https://pysolar.readthedocs.io/en/latest/#). Doel is om in een Jupyter notebook/Python file de gegevens van de zonnepanelen, historische weerdata en de positie van de zon in één dataset te krijgen. 
 
-Er is een kleine file `positie_zon.py` waarin de functie hiervan uitgeprobeerd wordt. Doel is om in een Jupyter notebook/Python file de gegevens van de zonnepanelen, historische weerdata en de positie van de zon in één dataset te krijgen. 
-
-## Combineren van de gegevens
-
-Op basis van de data van de zonnepanelen en de weergegevens wordt één DataFrame samengesteld. Deze gaat als input werken voor het machine learn model.
-
-## Machine learning
-
-Gaat het machine learning worden, of multi-regressie?
-
-Stappen te zetten:
-
-- [x] Gegevens inlezen in een Jupyter notebook
-- [x] Plotten van onderlinge correlatie [check dit](https://scikit-learn.org/stable/auto_examples/inspection/plot_linear_model_coefficient_interpretation.html#sphx-glr-auto-examples-inspection-plot-linear-model-coefficient-interpretation-py)
-- [x] Verschillende modellen testen, kNN als eerste volledig uitgewerkt
-- [x] Één model uitkiezen en uitwerken
-- [x] Model energie productie laten voorspellen
-- [x] Lopende som uitrekenen, wanneer deze onder de nul uit komt, is de batterij leeg
-- [x] Het aantal uren als einduitkomst geven

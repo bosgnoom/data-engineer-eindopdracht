@@ -17,7 +17,7 @@ import time
 
 # Start logger
 logger = logging.getLogger(__name__)
-coloredlogs.install(level="DEBUG", fmt="%(asctime)s %(levelname)s %(message)s")
+coloredlogs.install(level="INFO", fmt="%(asctime)s %(levelname)s %(message)s")
 
 
 def start_solaredge_api():

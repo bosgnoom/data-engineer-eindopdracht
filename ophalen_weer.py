@@ -14,7 +14,7 @@ import pandas as pd
 
 # Start logger
 logger = logging.getLogger(__name__)
-coloredlogs.install(level="DEBUG", fmt="%(asctime)s %(levelname)s %(message)s")
+coloredlogs.install(level="INFO", fmt="%(asctime)s %(levelname)s %(message)s")
 
 
 def get_solaredge_date_range(conn):
@@ -88,32 +88,31 @@ def get_data():
 
     # Is a fetch needed?
     if start_date == end_date:
-        logger.info('No data needs to be fetched from KNMI, exiting...')
-        exit(0)
+        logger.info('No data needs to be fetched from KNMI, skipping query...')
+    else:
+        logger.debug(f'Querying KNMI for dates {start_date} to {end_date}')
 
-    logger.debug(f'Querying KNMI for dates {start_date} to {end_date}')
+        # API call to KNMI, just get all data for now.
+        # TODO: Optimize, only request parameters which will be put into model
+        r = requests.get(
+            "https://www.daggegevens.knmi.nl/klimatologie/uurgegevens",
+            params={
+                "start": start_date,
+                "end": end_date,
+                "vars": "ALL",
+                "stns": 377,
+                "fmt": "json",
+            },
+        )
 
-    # API call to KNMI, just get all data for now.
-    # TODO: Optimize, only request parameters which will be put into model
-    r = requests.get(
-        "https://www.daggegevens.knmi.nl/klimatologie/uurgegevens",
-        params={
-            "start": start_date,
-            "end": end_date,
-            "vars": "ALL",
-            "stns": 377,
-            "fmt": "json",
-        },
-    )
+        # Convert the JSON to a DataFrame
+        logger.info('JSON to DataFrame')
+        weather_history = pd.DataFrame.from_dict(r.json())
 
-    # Convert the JSON to a DataFrame
-    logger.info('JSON to DataFrame')
-    weather_history = pd.DataFrame.from_dict(r.json())
-
-    # Save to database
-    logger.info('DataFrame to database')
-    weather_history.to_sql('knmi_history', con=conn , if_exists='append',
-            index_label='id')
+        # Save to database
+        logger.info('DataFrame to database')
+        weather_history.to_sql('knmi_history', con=conn , if_exists='append',
+                index_label='id')
 
     # Close connection to database
     conn.commit()

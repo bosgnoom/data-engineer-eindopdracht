@@ -28,12 +28,8 @@ Schematisch gezien:
 3. Ophalen weersvoorspelling van KNMI: `ophalen_weersvoorspelling.py` 
 4. Samenvoegen historische gegevens: `build_dataset.py`
 5. Data analyse en Machine learning: `data_analyse.ipynb`
-
-## Onderdelen in ontwikkeling
-
-6. Evaluatie
-7. Conclusie
-8. Tekstueel kloppend maken
+6. Evaluatie en conclusie
+7. Tekstueel kloppend maken
 
 ## Nog uit te voeren
 

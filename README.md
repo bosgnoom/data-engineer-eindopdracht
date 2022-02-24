@@ -1,4 +1,4 @@
-In deze repo staat de uitwerking van de eindopdracht van het NL Leert traject betreffende (Junior) Data Engineer - Bit-academy.nl. Copyright &copy; 2022 Paul Schouten.
+In deze [repo](https://github.com/bosgnoom/data-engineer-eindopdracht) staat de uitwerking van de eindopdracht van het NL Leert traject betreffende (Junior) Data Engineer - Bit-academy.nl. Copyright &copy; 2022 Paul Schouten.
 
 # Eindopdracht data engineer: Voorspelling opbrengst zonnepanelen
 

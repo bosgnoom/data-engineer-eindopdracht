@@ -1,8 +1,5 @@
 # Notities
 
-In dit document houd ik per (sub)onderwerp bij waar ik mee bezig ben en waar ik tegenaan gelopen ben. Ook bevat het een en ander aan TODO lijstjes...
-De volgorde en inhoud zullen nog vaak wijzigen...
-
 ## Diagrammen tekenen
 
 Via [Graphviz](https://graphviz.org/Gallery/directed/datastruct.html). De `dot` file is een simpele tekstfile, met het voorbeeld is deze gemakkelijk op te bouwen. Met de achtergrondkleur wordt de voortgang van dit project weergegeven.
@@ -12,7 +9,7 @@ Van `dot` file naar `svg`: `dot -Tsvg diagram.dot -odiagram.svg`
 ## Solaredge API
 
 De zonnepanelen op het dak zijn verbonden met een inverter van SolarEdge. Hier staat een en ander beschreven uit de [datasheet](documentatie/se_monitoring_api.pdf). Bron: [hier](https://www.solaredge.com/sites/default/files/se_monitoring_api.pdf) te vinden.
-In de file `solaredge_api.py` wordt de interface naar Solaredge uitgewerkt. Er wordt een verbinding gemaakt met de API van Solaredge. De gevonden gegevens worden opgeslagen in een database. _Waarschijnlijk is het handiger of in ieder geval sneller om een Python-API ergens van pip of github te halen, maar dit is leerzamer._ Via `solaredge.py` wordt bepaald in welke database de gegevens komen. In deze database wordt ook het aantal _calls_ naar de API bijgehouden. Er mogen per dag maar maximaal 300 calls gemaakt worden. Voordat dit aantal bereikt wordt, geeft de `api` een foutmelding en stopt het programma. 
+In de file `solaredge_api.py` wordt de interface naar Solaredge uitgewerkt. Er wordt een verbinding gemaakt met de API van Solaredge. De gevonden gegevens worden opgeslagen in een database. Via `solaredge.py` wordt bepaald in welke database de gegevens komen. In deze database wordt ook het aantal _calls_ naar de API bijgehouden. Er mogen per dag maar maximaal 300 calls gemaakt worden. Voordat dit aantal bereikt wordt, geeft de `api` een foutmelding en stopt het programma. 
 
 Korte samenvatting van de documentatie:
 - Er is een API key nodig (via de installateur verkregen): `http://monitoringapi.solaredge.com/{site_id}/details.json?api_key=[your_api_key]`
@@ -33,8 +30,6 @@ URLs:
 
 
 ## Ophalen weergegevens
-
-De opbrengst van de zonnepanelen is afhankelijk van het weer. Welke parameters het model ingaan, zal later beschreven worden.
 
 ### Historische gegevens
 

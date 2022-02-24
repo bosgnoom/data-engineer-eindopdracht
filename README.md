@@ -16,7 +16,7 @@ Aangezien de opbrengst van zonnepanelen afhankelijk is van onder andere het weer
 4. Naast de opbrengst van de zonnepanelen zijn ook gegevens over het weer nodig, zowel de **historische** gegevens als de **weersvoorspelling**. Deze zullen ook in de database opgeslagen worden. De bron zal nog bepaald moeten worden. Buienradar, het **KNMI** of openweatherdata zijn potentiële bronnen.
 5. De gegevens worden gevoed aan een machine-learn systeem. Er zal een model uitgezocht moeten worden. Daarnaast zal ook de nauwkeurigheid van dit model bepaald worden.
 6. Voorspelling van opbrengst van de zonnepanelen voor de komende dagen wordt bepaald aan de hand van het machine-learn model.
-7. Volgens het principe `in - uit + productie = accumulatie` wordt voorspeld hoe lang de batterij meegaat.
+7. Volgens het principe `in - uit + productie = accumulatie` wordt voorspeld hoe lang de accu meegaat.
 
 Schematisch gezien:
 ![diagram](https://github.com/bosgnoom/data-engineer-eindopdracht/blob/main/diagram.svg)
@@ -29,15 +29,4 @@ Schematisch gezien:
 4. Samenvoegen historische gegevens: `build_dataset.py`
 5. Data analyse en Machine learning: `data_analyse.ipynb`
 6. Evaluatie en conclusie
-7. Tekstueel kloppend maken
 
-## Nog uit te voeren
-
-- [x] Energieproductie aan de hand van model
-- [x] Uitrekenen wanneer batterij leeg is
-- [x] Evaluatie van het model
-    - [x] Opslaan huidige voorspelling
-    - [x] Plotten van vorige voorspellingen
-    - [x] Uitspraak betrouwbaarheid model
-- [x] Losse databases naar één enkele omzetten 
-- [x] Ander machine learn model (is XGBoost geworden) kiezen en evalueren

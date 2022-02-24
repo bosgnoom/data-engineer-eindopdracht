@@ -27,6 +27,6 @@ Schematisch gezien:
 2. Ophalen historische gegevens van KNMI: `ophalen_weer.py`
 3. Ophalen weersvoorspelling van KNMI: `ophalen_weersvoorspelling.py` 
 4. Samenvoegen historische gegevens: `build_dataset.py`
-5. Data analyse en Machine learning: `data_analyse.ipynb`
+5. Data analyse en Machine learning: `Eindopdracht.ipynb`
 6. Evaluatie en conclusie
 
